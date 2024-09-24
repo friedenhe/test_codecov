@@ -38,6 +38,6 @@ jobs:
       uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true 
-        files: ./coverage1.info 
+        files: ./coverage.info 
         token: 16e66ec6-0d9c-4489-9cb1-97b056cad830
         verbose: true
