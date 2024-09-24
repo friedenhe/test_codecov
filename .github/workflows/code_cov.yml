@@ -22,11 +22,7 @@ jobs:
             args: 'incompressible'
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: codecov/codecov-action@v4
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
+    - uses: actions/checkout@main
     - name: Create the docker container and run the tests
       run: |
         docker pull dafoam/opt-packages:${{env.DOCKER_TAG}}
@@ -38,6 +34,10 @@ jobs:
         docker exec -i regtest /bin/bash -c ". ${{env.DOCKER_ENV_FILE}} && cd ${{env.DOCKER_WORKING_DIR}} && pip install ."
         docker exec -i regtest /bin/bash -c ". ${{env.DOCKER_ENV_FILE}} && cd ${{env.DOCKER_WORKING_DIR}}/tests && python runUnitTests_DAOption.py"
         docker exec -i regtest /bin/bash -c ". ${{env.DOCKER_ENV_FILE}} && cd ${{env.DOCKER_WORKING_DIR}} && lcov --capture --directory . --output-file coverage.info && echo dafoamuser | sudo -S cp -r coverage.info ${{env.DOCKER_MOUNT_DIR}}/"
-        curl -Os https://uploader.codecov.io/latest/linux/codecov
-        chmod +x codecov
-        ./codecov
+    - name: Upload
+      uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: true 
+        files: ./coverage1.info 
+        token: 16e66ec6-0d9c-4489-9cb1-97b056cad830
+        verbose: true
