@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# the script will exit if there is any error
+set -e
+
+if [ -z "$WM_PROJECT" ]; then
+  echo "OpenFOAM environment not found, forgot to source the OpenFOAM bashrc?"
+  exit 1
+fi
+
+wmakeLnInclude src/adjoint
+cd src/adjoint/DAUtility && wmake && cd -
+cd src/adjoint/DAOption && wmake && cd -
+cd src/pyUnitTests && ./Allmake && cd -
+pip install .
